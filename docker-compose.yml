@@ -1,0 +1,380 @@
+version: '3'
+
+services:
+  web:
+    image: nginx:latest
+    container_name: mi-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./landing/html:/usr/share/nginx/html:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - php
+
+  php:
+    image: php:8.1-fpm
+    container_name: mi-php
+    volumes:
+      - ./landing/html:/usr/share/nginx/html
+  ### FRONTEND 
+  # forsvar_frontend:
+  #   build:
+  #     context: ./forsvar_frontend  # Use the current directory as the build context
+  #     dockerfile: Dockerfile  # Specify the path to your Dockerfile    
+  #   container_name: forsvar_frontend  
+  #   volumes:
+  #     - ./forsvar_frontend/html:/var/www/html
+  #   environment:
+  #     - DB_HOST=${DB_HOST}
+  #     - DB_PORT=${DB_PORT}
+  #     - DB_DATABASE=${DB_DATABASE}
+  #     - DB_USERNAME=${DB_USERNAME}
+  #     - DB_PASSWORD=${DB_PASSWORD}               
+  #     - AUTHZERO=${AUTHZERO}        
+  #     - WHITE_LABEL=${WHITE_LABEL}  
+  #     - ENTERPRISE=${ENTERPRISE}  
+  #     - DOMAIN=${DOMAIN} 
+  #     - TREE_VERSION_WEBHOOK=${TREE_VERSION_WEBHOOK}  
+  #     - LIST_API=${LIST_API}  
+  #     - FUZZY_API=${FUZZY_API}   
+  #     #- GUARDLINE_KEVIN_SERVICE_HOST=${GUARDLINE_KEVIN_SERVICE_HOST}   
+  #     #- GUARDLINE_K8=${GUARDLINE_K8} 
+  #     - KEVIN=${KEVIN} 
+  #     - ONBOARDING=${ONBOARDING} 
+  #     - WHITELIST=${WHITELIST} 
+  #     - APIKEY=${APIKEY} 
+  #     - ELASTIC_SEARCH_SERVICE=${ELASTIC_SEARCH_SERVICE}
+  #     - ELASTIC_SEARCH_SERVICE_PORT=${ELASTIC_SEARCH_SERVICE_PORT}
+  #     - ELASTIC_SEARCH_PASSWORD=${ELASTIC_SEARCH_PASSWORD}
+  #     - ELASTIC_SEARCH_USER=${ELASTIC_SEARCH_USER}      
+  #   ports:
+  #     - "80:80"    
+  #   depends_on:
+  #     - mysql          
+  #   networks:
+  #     - my-network
+
+  # fuzzy-match:
+  #   build:
+  #     context: ./fuzzy-match 
+  #     dockerfile: Dockerfile  # Specify the path to your Dockerfile   
+  #   container_name: fuzzy-match
+  #   environment:
+  #     - DB_HOST_LIST=${DB_HOST_LIST}
+  #     - DB_PORT_LIST=${DB_PORT_LIST}
+  #     - DB_DATABASE_LIST=${DB_DATABASE_LIST}
+  #     - DB_USERNAME_LIST=${DB_USERNAME_LIST}
+  #     - DB_PASSWORD_LIST=${DB_PASSWORD_LIST} 
+  #   ports:
+  #     - "8000:8000"      
+  #   volumes:
+  #     - ./fuzzy-match/source:/fuzzy
+  #     - ./fuzzy-match/source/logs/gunicorn:/var/log/
+  #   depends_on:
+  #     - mysql 
+  #   networks:
+  #     - my-network    
+
+
+  # kevin-ia:
+  #   build:
+  #     context: ./kevin-ia
+  #     dockerfile: Dockerfile  # Specify the path to your Dockerfile   
+  #   container_name: kevin-ia
+  #   environment:
+  #     - DB_HOST_LIST=${DB_HOST_LIST}
+  #     - DB_PORT_LIST=${DB_PORT_LIST}
+  #     - DB_DATABASE_LIST=${DB_DATABASE_LIST}
+  #     - DB_USERNAME_LIST=${DB_USERNAME_LIST}
+  #     - DB_PASSWORD_LIST=${DB_PASSWORD_LIST} 
+  #   ports:
+  #     - "8002:8002"      
+  #   volumes:
+  #     - ./kevin-ia/source:/kevin-ia
+  #     - ./kevin-ia/source/logs/gunicorn:/var/log/
+  #   networks:
+  #     - my-network        
+
+  ### FRONTEND 
+  # list-downloader:
+  #   build:
+  #     context: ./list-downloader  # Use the current directory as the build context
+  #     dockerfile: Dockerfile  # Specify the path to your Dockerfile    
+  #   container_name: list-downloader  
+  #   volumes:
+  #     - ./list-downloader/list-downloader:/list-downloader
+  #     - ./list-downloader/html:/var/www/html  
+  #   environment:
+  #     - DB_HOST_LIST=${DB_HOST_LIST}
+  #     - DB_PORT_LIST=${DB_PORT_LIST}
+  #     - DB_DATABASE_LIST=${DB_DATABASE_LIST}
+  #     - DB_USERNAME_LIST=${DB_USERNAME_LIST}
+  #     - DB_PASSWORD_LIST=${DB_PASSWORD_LIST} 
+  #   ports:
+  #     - "8081:8081"   
+  #   depends_on:
+  #     - mysql                                
+  #   networks:
+  #     - my-network
+
+  ### FRONTEND 
+  # list-updater:
+  #   build:
+  #     context: ./list-updater  # Use the current directory as the build context
+  #     dockerfile: Dockerfile  # Specify the path to your Dockerfile    
+  #   container_name: list-updater  
+  #   volumes:
+  #     - ./list-updater/list-downloader:/list-downloader
+  #     - ./list-updater/html:/var/www/html  
+  #   environment:
+  #     - DB_HOST_LIST=${DB_HOST_LIST}
+  #     - DB_PORT_LIST=${DB_PORT_LIST}
+  #     - DB_DATABASE_LIST=${DB_DATABASE_LIST}
+  #     - DB_USERNAME_LIST=${DB_USERNAME_LIST}
+  #     - DB_PASSWORD_LIST=${DB_PASSWORD_LIST}                           
+  #   networks:
+  #     - my-network      
+
+  # forsvar_engine:
+  #   build:
+  #     context: ./forsvar_engine 
+  #     dockerfile: Dockerfile  # Specify the path to your Dockerfile   
+  #   container_name: forsvar_engine
+  #   environment:
+  #     - DB_HOST=${DB_HOST}
+  #     - DB_PORT=${DB_PORT}
+  #     - DB_DATABASE=${DB_DATABASE}
+  #     - DB_USERNAME=${DB_USERNAME}
+  #     - DB_PASSWORD=${DB_PASSWORD}      
+  #     - REDIS_HOST=${REDIS_HOST}      
+  #     - REDIS_PORT=${REDIS_PORT}      
+  #     - REDIS_PASSWORD=${REDIS_PASSWORD}
+  #     - ELASTIC_SEARCH_SERVICE=${ELASTIC_SEARCH_SERVICE}
+  #     - ELASTIC_SEARCH_SERVICE_PORT=${ELASTIC_SEARCH_SERVICE_PORT}
+  #     - ELASTIC_SEARCH_PASSWORD=${ELASTIC_SEARCH_PASSWORD}
+  #     - ELASTIC_SEARCH_USER=${ELASTIC_SEARCH_USER}
+  #     - STRING_LOGS=${STRING_LOGS}
+  #   ports:
+  #     - "8000:8000"      
+  #   volumes:
+  #     - ./forsvar_engine/source:/pythonapp-source
+  #     - ./forsvar_engine/logs/gunicorn:/var/log/
+  #   depends_on:
+  #     - mysql 
+  #     - elasticsearch
+  #   networks:
+  #     - my-network    
+
+
+  # elasticsearch:
+  #   image: docker.elastic.co/elasticsearch/elasticsearch:8.9.1
+  #   container_name: elasticsearch
+  #   environment:
+  #     - node.name=elasticsearch
+  #     - discovery.type=single-node
+  #   ports:
+  #     - "9200:9200"
+      
+  #   volumes:
+  #     - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml      
+  #   networks:
+  #     - my-network 
+      
+
+  ### ONBOARDING 
+  # onboarding-php:
+  #   build:
+  #     context: ./onboarding-aml-php  # Use the current directory as the build context
+  #     dockerfile: Dockerfile  # Specify the path to your Dockerfile    
+  #   container_name: onboarding-aml-php   
+  #   volumes:
+  #     - ./onboarding-aml-php/html:/var/www/html
+  #   environment:
+  #     - DB_HOST=${DB_HOST}
+  #     - DB_PORT=${DB_PORT}
+  #     - DB_DATABASE=${DB_DATABASE}
+  #     - DB_USERNAME=${DB_USERNAME}
+  #     - DB_PASSWORD=${DB_PASSWORD}               
+  #     - INTEGRATOR=${INTEGRATOR} 
+  #     - FUZZY_API=${FUZZY_API}        
+  #   ports:
+  #     - "8080:8080" 
+  #   depends_on:
+  #     - mysql             
+  #   networks:
+  #     - my-network
+
+  # mysql:
+  #   image: mariadb:10.4.31
+  #   container_name: mysql-container
+  #   restart: unless-stopped
+  #   environment:
+  #     MYSQL_USER: ${DB_USERNAME}
+  #     MYSQL_PASSWORD: ${DB_PASSWORD}
+  #     MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+  #     MARIADB_DATABASE: ${DB_DATABASE}
+  #   volumes:
+  #     - ./mysql/mysql-data:/var/lib/mysql:rw
+  #     - ./mysql:/docker-entrypoint-initdb.d/:rw
+  #     - ./mysql/bind.cnf:/etc/mysql/conf.d/bind.cnf:ro
+  #   ports:
+  #     - "3306:3306"
+  #   networks:
+  #     - my-network
+
+  # mailer:
+  #   build:
+  #     context: ./mailer-microservice  # Use the current directory as the build context
+  #     dockerfile: Dockerfile  # Specify the path to your Dockerfile    
+  #   container_name: mailer 
+  #   volumes:
+  #     - ./mailer-microservice/source:/mailer
+  #   environment:
+  #     - DB_HOST=${DB_HOST}
+  #     - DB_PORT=${DB_PORT}
+  #     - DB_DATABASE=${DB_DATABASE}
+  #     - DB_USERNAME=${DB_USERNAME}
+  #     - DB_PASSWORD=${DB_PASSWORD}  
+  #   depends_on:
+  #     - mysql                                 
+  #   networks:
+  #     - my-network
+
+  # risk-score-single:
+  #   build:
+  #     context: ./risk-score-single
+  #     dockerfile: Dockerfile  # Specify the path to your Dockerfile   
+  #   container_name: risk-score-single
+  #   environment:
+  #     - DB_HOST=${DB_HOST}
+  #     - DB_PORT=${DB_PORT}
+  #     - DB_DATABASE=${DB_DATABASE}
+  #     - DB_USERNAME=${DB_USERNAME}
+  #     - DB_PASSWORD=${DB_PASSWORD} 
+  #     - RISK_SCORE_INPUT=${RISK_SCORE_INPUT}    
+  #   volumes:
+  #     - ./risk-score-single/source:/risk-score-single
+  #   depends_on:
+  #     - mysql 
+  #   networks:
+  #     - my-network    
+
+  # fuzzy-matrix:
+  #   build:
+  #     context: ./fuzzy-matrix
+  #     dockerfile: Dockerfile  # Specify the path to your Dockerfile   
+  #   container_name: fuzzy-matrix
+  #   environment:
+  #     - DB_HOST=${DB_HOST}
+  #     - DB_PORT=${DB_PORT}
+  #     - DB_DATABASE=${DB_DATABASE}
+  #     - DB_USERNAME=${DB_USERNAME}
+  #     - DB_PASSWORD=${DB_PASSWORD}  
+  #     - FUZZY_API=${FUZZY_API}  
+  #     - BATCH_SIZE=${BATCH_SIZE}  
+  #     - COMPANY_ID=${COMPANY_ID}  
+  #     - UMBRAL=${UMBRAL}  
+  #     - SOURCE_LIST=${SOURCE_LIST}       
+  #   volumes:
+  #     - ./fuzzy-matrix/source:/fuzzy-matrix
+  #   depends_on:
+  #     - mysql 
+  #   networks:
+  #     - my-network         
+
+  # guardline-k8:
+  #   build:
+  #     context: ./guardline-k8
+  #     dockerfile: Dockerfile  # Specify the path to your Dockerfile   
+  #   container_name: guardline-k8
+  #   environment:
+  #     - DB_HOST=${DB_HOST}
+  #     - DB_PORT=${DB_PORT}
+  #     - DB_DATABASE=${DB_DATABASE}
+  #     - DB_USERNAME=${DB_USERNAME}
+  #     - DB_PASSWORD=${DB_PASSWORD} 
+  #   ports:
+  #     - "8087:8087"      
+  #   volumes:
+  #     - ./guardline-k8/source:/guardline-k8
+  #     - ./guardline-k8/source/logs/gunicorn:/var/log/
+  #   depends_on:
+  #     - mysql 
+  #   networks:
+  #     - my-network      
+
+  # ### sftp-integrator 
+  # sftp-integrator:
+  #   build:
+  #     context: ./sftp-integration-client  # Use the current directory as the build context
+  #     dockerfile: Dockerfile  # Specify the path to your Dockerfile    
+  #   container_name: sftp-integrator 
+  #   volumes:
+  #     - ./sftp-integration-client/sftp-integrator:/sftp-integrator
+  #   environment:
+  #     - DB_HOST=${DB_HOST}
+  #     - DB_PORT=${DB_PORT}
+  #     - DB_DATABASE=${DB_DATABASE}
+  #     - DB_USERNAME=${DB_USERNAME}
+  #     - DB_PASSWORD=${DB_PASSWORD} 
+  #   depends_on:
+  #     - mysql                                
+  #   networks:
+  #     - my-network    
+
+  # zookeeper:
+  #   image: wurstmeister/zookeeper:latest
+  #   container_name: zookeeper 
+  #   ports:
+  #     - "22181:2181"
+  #   environment:
+  #     ZOOKEEPER_CLIENT_PORT: 2181
+  #     ZOOKEEPER_TICK_TIME: 2000
+  #   networks:
+  #     - my-network
+
+  # kafka:
+  #   image: wurstmeister/kafka:latest
+  #   ports:
+  #     - "9092:9092"
+  #   container_name: kafka  
+  #   environment:
+  #     KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
+  #     KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
+  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+  #     KAFKA_LISTENER_NAME: INSIDE
+  #     KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
+  #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  #     KAFKA_CONNECTIONS_MAX_IDLE_MS: 3000
+  #   networks:
+  #     - my-network     
+  #   depends_on:
+  #     - zookeeper 
+
+  # python-kafka-producer:
+  #   image: python:3.9
+  #   volumes:
+  #     - ./scripts:/scripts
+  #   working_dir: /scripts
+  #   command: bash -c "pip3 install kafka-python && tail -f /dev/null"
+  #   depends_on:
+  #     - kafka 
+  #   networks:
+  #     - my-network     
+
+  # python-kafka-consumer:
+  #   image: python:3.9
+  #   volumes:
+  #     - ./scripts:/scripts
+  #   working_dir: /scripts
+  #   command: bash -c "pip3 install kafka-python && tail -f /dev/null"
+  #   depends_on:
+  #     - kafka 
+  #   networks:
+  #     - my-network            
+
+networks:
+  my-network:
+    driver: bridge
